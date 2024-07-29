@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import './user.css'
+import './user.css';
+import axios from 'axios';
 
 const User = () => {
 
@@ -7,12 +8,14 @@ const User = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                
+                const response = await axios.get("http://localhost:8000/api/users");
+                setUsers(response.data);
             } catch (error) {
                 console.log('Error fetching data', error);
             }
-        }
-    })
+        };
+        fetchData();
+    }, [])
     
   return (
     <div className='userTable'>
@@ -28,20 +31,24 @@ const User = () => {
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Nasim Azizi</td>
-                    <td>Nasim@azizi.com</td>
-                    <td>Kabul, Afghanistan</td>
-                    <td className='actionButtons'>
-                        <button className='btn btn-info'>
-                            <i className='fa-solid fa-pen-to-square'></i>
-                        </button>
-                        <button className='btn btn-danger'>
-                            <i className='fa-solid fa-trash'></i>
-                        </button>
-                    </td>
-                </tr>
+               {users.map((user, index) => {
+                return(
+                    <tr>
+                        <td>{index + 1}</td>
+                        <td>{user.name}</td>
+                        <td>{user.email}</td>
+                        <td>{user.address}</td>
+                        <td className='actionButtons'>
+                            <button className='btn btn-info'>
+                                <i className='fa-solid fa-pen-to-square'></i>
+                            </button>
+                            <button className='btn btn-danger'>
+                                <i className='fa-solid fa-trash'></i>
+                            </button>
+                        </td>
+                    </tr>
+                )
+               })}
             </tbody>
         </table>
     </div>
