@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import './adduser.css'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const AddUser = () => {
 
@@ -10,18 +12,37 @@ const AddUser = () => {
     address: ""
   }
 
+  const inputHandler = (e) => {
+    const {name, value} = e.target
+    setUser({...user, [name]: value})
+  }
+
+  const submitForm = async (e) => {
+    e.preventDefault()
+    await axios.post('http://localhost:8000/api/user', user)
+    .then((response) => {
+      toast.success(response.data.message, { position: "top-center"})
+      navigate('/');
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  }
+
   const [user, setUser] = useState(users);
+  const navigate = useNavigate();
 
   return (
     <div className='addUser'>
       <Link type='button' to='/'  className='btn btn-secondary'><i className='fa-solid fa-backward'></i> Back</Link>
       <h3>Add New User</h3>
-      <form className='addUserForm'>
+      <form className='addUserForm' onSubmit={submitForm}>
         <div className='inputGroup'>
           <label htmlFor="name">Name:</label>
           <input 
             type="text"
             id='name'
+            onChange={inputHandler}
             name='name'
             autoComplete='off'
             placeholder='Enter your name'
@@ -32,6 +53,7 @@ const AddUser = () => {
           <input 
             type="email"
             id='email'
+            onChange={inputHandler}
             name='email'
             autoComplete='off'
             placeholder='Enter your email'
@@ -42,13 +64,14 @@ const AddUser = () => {
           <input 
             type="text"
             id='address'
+            onChange={inputHandler}
             name='address'
             autoComplete='off'
             placeholder='Enter your address'
              />
         </div>
         <div className="inputGroup">
-          <button className='btn btn-primary'>Submit</button>
+          <button type='submit' className='btn btn-primary'>Submit</button>
         </div>
       </form>
     </div>
