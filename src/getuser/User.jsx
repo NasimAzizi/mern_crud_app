@@ -33,37 +33,42 @@ const User = () => {
   return (
     <div className='userTable'>
         <Link to='/add' className='btn btn-primary' type='button'>Add User<i className='fa-solid fa-user-plus'></i></Link>
-        <table className='table table-bordered'>
-            <thead>
+
+        {users.length === 0 ? (
+            <div className='no-data'>No user found, please add new user</div>
+        ):   <table className='table table-bordered'>
+        <thead>
+            <tr>
+                <th scope='col'>S.No.</th>
+                <th scope='col'>Name</th>
+                <th scope='col'>Email</th>
+                <th scope='col'>Address</th>
+                <th scope='col'>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+           {users.map((user, index) => {
+            return(
                 <tr>
-                    <th scope='col'>S.No.</th>
-                    <th scope='col'>Name</th>
-                    <th scope='col'>Email</th>
-                    <th scope='col'>Address</th>
-                    <th scope='col'>Actions</th>
+                    <td>{index + 1}</td>
+                    <td>{user.name}</td>
+                    <td>{user.email}</td>
+                    <td>{user.address}</td>
+                    <td className='actionButtons'>
+                        <Link to={`/update/`+user._id} className='btn btn-info'>
+                            <i className='fa-solid fa-pen-to-square'></i>
+                        </Link>
+                        <button className='btn btn-danger' onClick={() => deleteUser(user._id)}>
+                            <i className='fa-solid fa-trash'></i>
+                        </button>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-               {users.map((user, index) => {
-                return(
-                    <tr>
-                        <td>{index + 1}</td>
-                        <td>{user.name}</td>
-                        <td>{user.email}</td>
-                        <td>{user.address}</td>
-                        <td className='actionButtons'>
-                            <Link to={`/update/`+user._id} className='btn btn-info'>
-                                <i className='fa-solid fa-pen-to-square'></i>
-                            </Link>
-                            <button className='btn btn-danger' onClick={() => deleteUser(user._id)}>
-                                <i className='fa-solid fa-trash'></i>
-                            </button>
-                        </td>
-                    </tr>
-                )
-               })}
-            </tbody>
-        </table>
+            )
+           })}
+        </tbody>
+    </table>}
+
+      
     </div>
   )
 }
